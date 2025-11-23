@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victor Soussan | Principal Product Designer</title>
+    <meta name="description" content="Portfolio of Victor Soussan - Strategic Product Designer specializing in Design Systems, Prototyping and Team Leadership.">
+    
+    <!-- Fonts: Inter (Neo-Grotesque style for clarity and professionalism) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS via CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        apple: {
+                            bg: '#F5F5F7',       // Light gray background, reduces eye strain
+                            card: '#FFFFFF',     // White for cards
+                            text: '#1D1D1F',     // High contrast dark gray text
+                            subtext: '#86868B',  // Secondary text
+                            border: 'rgba(0,0,0,0.05)',
+                            accent: '#0071E3',   // System Blue for primary actions
+                            dark: '#121212',     // Dark mode elements
+                            lab: '#1C1C1E'       // Darker background for the Lab section
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 24px rgba(0,0,0,0.04)',
+                        'hover': '0 12px 40px rgba(0,0,0,0.08)',
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+                        'floating': '0 20px 40px -10px rgba(0,0,0,0.15)'
+                    },
+                    animation: {
+                        'scroll': 'scroll 40s linear infinite',
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                    },
+                    keyframes: {
+                        scroll: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- React & ReactDOM for component-based architecture -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel to compile JSX in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Framer Motion for animations -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
+    <style>
+        /* Global Styles */
+        body {
+            background-color: #F5F5F7;
+            color: #1D1D1F;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D1D1D6; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #86868B; }
+
+        /* Glassmorphism Utility Class */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .text-balance { text-wrap: balance; }
+        .group:hover .animate-scroll { animation-play-state: paused; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        // Safely access Framer Motion from global scope
+        const { motion, AnimatePresence, useScroll, useTransform } = window.Motion;
+
+        // --- DATA SECTION ---
+        // This object contains all the textual content and configuration for the portfolio.
+        // You can edit the text here directly to update your site.
+
+        const DATA = {
+            profile: {
+                name: "Victor Soussan",
+                role: "Principal Product Designer",
+                avatarImage: "", // Placeholder for your profile picture. Example: "./images/victor.jpg"
+                heroTitle: "Clarifying complexity through craft and collaboration.",
+                heroText: "I am a Product Design Lead with 15 years of experience in tech. I help organizations navigate ambiguity by making ideas tangible. My core strength lies in rapid materialization—using prototyping to align stakeholders—and in leading design squads to deliver robust, scalable systems over the long term.",
+                bio: "Great products are rarely built in isolation. They are the result of rigorous collaboration between design, engineering, and product management. My background in Art Direction gave me an eye for detail, but 15 years in the field taught me that the real work happens in the trenches—solving edge cases with developers and iterating based on real-world usage.\n\nI have led design through massive pivots at scale-ups like UNOWHY and Dailymotion, and helped launch new ventures like Toolkit. I believe in leadership that empowers designers to be strategic partners. Whether I'm defining a 2-year roadmap with a CPO or fixing a CSS bug with a junior dev, I bring the same level of care and pragmatism.",
+                stats: [
+                    { label: "Users Impacted", value: "500k+" },
+                    { label: "Years Experience", value: "15+" },
+                    { label: "Publishers Empowered", value: "8k+" }
+                ]
+            },
+            caseStudies: [
+                {
+                    id: "toolkit",
+                    client: "Toolkit",
+                    title: "Structuring the Chaos of Construction",
+                    subtitle: "Building a B2B SaaS from a blank page to Series A.",
+                    role: "Founding Designer",
+                    color: "#3B82F6", 
+                    imageGradient: "from-blue-50 to-blue-100",
+                    image: "", // Add your project image path here
+                    visuals: ["", "", "", "", "", ""], // Add paths to your 6 detail images
+                    metadata: [ { label: "Scope", value: "0-to-1 Product" }, { label: "Outcome", value: "2,000+ Clients" } ],
+                    executiveSummary: "Construction sites are unpredictable environments. As the Founding Designer for Toolkit, I partnered with the CEO to translate deep industry knowledge into a structured digital product. The challenge was not just UI, but defining the object model of the application itself.",
+                    sections: [
+                        { heading: "1. Defining the Core Model", text: "We started with a blank slate. I facilitated workshops to map out the physical workflows of a construction site—zones, tasks, teams—and translated them into a digital information architecture that felt intuitive to non-tech-savvy users." },
+                        { heading: "2. Prototyping to Convince", text: "To secure our Seed round, we needed more than slides. I built a high-fidelity, clickable prototype of the entire core flow. This allowed investors to 'use' the product before a line of code was written, proving the viability of our vision." },
+                        { heading: "3. The Planning Engine", text: "The heart of Toolkit is the Gantt planning view. I designed a custom interaction model allowing direct manipulation of tasks (drag, stretch, link). I worked closely with the engineering lead to ensure these complex interactions were performant in the browser." },
+                        { heading: "4. Designing for the Field", text: "A construction app is used in bright sunlight, often offline. I prioritized high contrast, large touch targets, and 'optimistic UI' patterns to ensure the app felt responsive even with poor connectivity." },
+                        { heading: "5. Establishing the System", text: "As we hired our first developers, I set up a pragmatic Design System based on Tailwind tokens. This allowed the team to ship admin features autonomously while I focused on the complex UX of the planning engine." }
+                    ]
+                },
+                {
+                    id: "sqool",
+                    client: "UNOWHY / SQOOL",
+                    title: "Orchestrating a Platform Pivot",
+                    subtitle: "Guiding a 6-year transition from hardware to a SaaS ecosystem.",
+                    role: "Lead Product Designer",
+                    color: "#EC4899", 
+                    imageGradient: "from-pink-50 to-pink-100",
+                    image: "",
+                    visuals: ["", "", "", "", "", ""],
+                    metadata: [ { label: "Users", value: "500k Students" }, { label: "Team", value: "5 Designers" } ],
+                    executiveSummary: "At UNOWHY, I led the design strategy for a critical pivot: decoupling our software from our tablets. We moved from a monolithic Android launcher to a suite of web apps. My role involved architectural strategy, team leadership, and persistent stakeholder alignment.",
+                    sections: [
+                        { heading: "1. The Legacy Trap", text: "Our legacy Android launcher was rigid and hard to update. To scale into high schools, we needed a web-first approach. I co-authored the product strategy to break the monolith into modular apps (Classe, Partage, MDM)." },
+                        { heading: "2. Visualizing the North Star", text: "To align the C-suite on this risky pivot, I created 'Connect'—a visionary prototype. It demonstrated how a web dashboard could offer the same fluidity as a native app. This artifact was crucial in unlocking the budget and technical resources for the migration." },
+                        { heading: "3. Unifying the Experience", text: "With 5 independent squads building different apps, fragmentation was a risk. I introduced 'La Bulle' (a persistent navigation overlay) and a unified Design System as the 'glue' that held the ecosystem together across devices." },
+                        { heading: "4. Design Ops & Leadership", text: "I scaled the design team from 1 to 5. I established weekly rituals (Design Crits, Dev Syncs) and a rigid QA process to ensure quality didn't suffer as velocity increased. I mentored junior designers to become owners of their respective product scopes." },
+                        { heading: "5. Long-term Impact", text: "The new SQOOL suite is now deployed in 465 high schools. The modular architecture allows us to release updates weekly instead of annually, significantly improving our responsiveness to user feedback." }
+                    ]
+                },
+                {
+                    id: "dailymotion",
+                    client: "Dailymotion",
+                    title: "Mission-Critical Media Tools",
+                    subtitle: "Designing reliability for high-pressure broadcast environments.",
+                    role: "Senior Product Designer",
+                    color: "#10B981",
+                    imageGradient: "from-emerald-50 to-emerald-100",
+                    image: "",
+                    visuals: ["", "", "", "", "", ""],
+                    metadata: [ { label: "Metric", value: "-50% Setup Time" }, { label: "Focus", value: "B2B / Live" } ],
+                    executiveSummary: "For professional broadcasters like CNN or France TV, a glitch is a disaster. I led the redesign of Dailymotion's Partner Suite, prioritizing reliability, error recovery, and speed over visual flair.",
+                    sections: [
+                        { heading: "1. The Operator's Reality", text: "I spent weeks observing video editors in newsrooms. I learned that they don't want 'delight'; they want keyboard shortcuts, density, and confidence. We shifted our design philosophy from 'Consumer Simplicity' to 'Professional Efficiency'." },
+                        { heading: "2. The Live Cockpit", text: "During a live event, operators need to see status instantly. I designed the Live Dashboard with high data density and clear status indicators. We used distinct visual signals for 'On Air', 'Buffering', and 'Offline' to reduce cognitive load under stress." },
+                        { heading: "3. Resilient Mobile Uploads", text: "Journalists in the field often have terrible connections. For the mobile app, I focused on 'resilient UX'. I designed background upload processes and robust local caching, ensuring that a dropped connection never meant lost work." },
+                        { heading: "4. Engineering Collaboration", text: "This project required deep technical alignment. I organized 'Design QA' sessions where I sat with developers to tweak animations and states directly in the browser, ensuring the complex encoding logic was accurately reflected in the UI." },
+                        { heading: "5. Business Outcomes", text: "The redesign reduced livestream setup time by 50% and drastically lowered support tickets related to encoding errors. It helped position Dailymotion as a serious technical partner for enterprise clients." }
+                    ]
+                },
+                {
+                    id: "francevae",
+                    client: "France VAE",
+                    title: "Modernizing Public Service",
+                    subtitle: "Simplifying complex bureaucracy through service design.",
+                    role: "Lead Product Designer",
+                    color: "#6366f1",
+                    imageGradient: "from-indigo-50 to-indigo-100",
+                    image: "",
+                    visuals: ["", "", "", "", "", ""],
+                    metadata: [ { label: "Context", value: "GovTech" }, { label: "Focus", value: "Service Design" } ],
+                    executiveSummary: "Validation of Acquired Experience (VAE) is a powerful tool for social mobility, but the process was opaque. Working with the State Startup Beta.gouv.fr, I helped design a unified digital service to simplify the journey for candidates and employers.",
+                    sections: [
+                        { heading: "1. Mapping the Service", text: "The administrative process was non-linear and confusing. I facilitated workshops with field actors (architects, certifiers) to map the reality of the process and identify the biggest friction points for candidates." },
+                        { heading: "2. Visualizing the Target", text: "To align inter-ministerial stakeholders who had conflicting visions, I produced a motion-design video simulating the ideal candidate journey. This artifact served as a 'North Star' that rallied the team around a shared user-centric vision." },
+                        { heading: "3. Operational Design", text: "We didn't just design screens; we designed the service. I audited transactional emails and notifications, rewriting them to be reassuring and actionable. We treated every touchpoint as part of the UX." },
+                        { heading: "4. Structuring Delivery", text: "As the team grew, I structured the Figma files and established a 'Lot-based' delivery workflow to match the development sprints, ensuring that design was always one step ahead of code." },
+                        { heading: "5. Public Impact", text: "We successfully launched the MVP for the 'Collective VAE', providing a structured digital entry point for thousands of users. The new design language brought a necessary modernization to the public service image." }
+                    ]
+                },
+                {
+                    id: "pagesjaunes",
+                    client: "PagesJaunes",
+                    title: "Revitalizing a Legacy App",
+                    subtitle: "Navigating the constraints of a massive user base (22M downloads).",
+                    role: "Lead UI/UX",
+                    color: "#F59E0B",
+                    imageGradient: "from-yellow-50 to-yellow-100",
+                    image: "",
+                    visuals: ["", "", "", "", "", ""],
+                    metadata: [ { label: "Reach", value: "300k Daily Users" }, { label: "OS", value: "iOS & Android" } ],
+                    executiveSummary: "Updating an app used by millions is a delicate balance. At PagesJaunes, I led the UI/UX team in modernizing the mobile experience while maintaining familiarity for our core, older demographic.",
+                    sections: [
+                        { heading: "1. The Legacy Challenge", text: "With 300k daily users, any major change risks alienation. We adopted an iterative approach, updating the interface module by module rather than a 'Big Bang' redesign, allowing us to test and measure impact incrementally." },
+                        { heading: "2. Cross-Platform Consistency", text: "I was responsible for maintaining feature parity between iOS and Android while respecting the specific guidelines of each platform (Material Design vs. HIG). We built a pattern library to document these platform-specific adaptations." },
+                        { heading: "3. Onboarding & Retention", text: "I designed a new onboarding flow focused on personalization. By asking users for their preferences upfront (neighborhoods, interests), we were able to deliver a more relevant homepage feed, improving D+1 retention." },
+                        { heading: "4. Search Evolution", text: "Search is the core utility. We redesigned the search experience to be faster and more forgiving, introducing 'Favorites' and 'Recent' shortcuts that reduced the time-to-result for recurring users." },
+                        { heading: "5. Mentorship", text: "I mentored a team of 4 UI designers, helping them transition from a pure graphic design mindset to a product design approach. I facilitated weekly design reviews to ensure consistency across the different feature squads." }
+                    ]
+                },
+                {
+                    id: "ogury",
+                    client: "Ogury",
+                    title: "Visualizing Big Data",
+                    subtitle: "Making complex ad-tech data actionable for decision makers.",
+                    role: "Product Designer",
+                    color: "#8B5CF6",
+                    imageGradient: "from-purple-50 to-purple-100",
+                    image: "",
+                    visuals: ["", "", "", "", "", ""],
+                    metadata: [ { label: "Type", value: "Dashboard" }, { label: "Data", value: "Big Data" } ],
+                    executiveSummary: "Ogury deals with massive amounts of mobile targeting data. My role was to design internal dashboards that allowed account managers to visualize campaign performance and optimize targeting without needing a data scientist.",
+                    sections: [
+                        { heading: "1. The Data Problem", text: "Account managers were drowning in spreadsheets. The challenge was to present multi-dimensional data (location, interests, usage) in a way that was digestible and allowed for quick decision-making." },
+                        { heading: "2. Interactive Prototyping", text: "I used high-fidelity prototypes to test complex filter logic and data visualization behaviors. This allowed us to catch usability issues with the query builder before development started." },
+                        { heading: "3. Bespoke Components", text: "Standard chart libraries weren't enough. I designed custom data visualization components that specifically addressed our need to compare cohort performance over time." },
+                        { heading: "4. Dev Collaboration", text: "I worked desk-to-desk with Data Scientists and Angular developers. We had to find the balance between the 'ideal' visualization and what was computationally feasible to render in the browser." },
+                        { heading: "5. Outcome", text: "The new dashboards streamlined the campaign management workflow, significantly reducing the time required to generate client reports and optimize live campaigns." }
+                    ]
+                }
+            ],
+            capabilities: [
+                {
+                    id: "c1",
+                    title: "Rapid Materialization",
+                    description: "I use prototyping as a strategic tool. By making abstract requirements concrete early, I help teams debate actual solutions rather than theoretical problems, significantly speeding up decision-making.",
+                    image: ""
+                },
+                {
+                    id: "c2",
+                    title: "Design Leadership",
+                    description: "I build healthy design cultures. I establish the rituals (Design QA, Crits, Syncs) that ensure quality scales with the team. I mentor designers to become strategic partners, not just executioners.",
+                    image: ""
+                },
+                {
+                    id: "c3",
+                    title: "Systemic Architecture",
+                    description: "I think in systems. I architect Design Systems (Tokens, Components) that are pragmatic and code-ready, bridging the gap between Figma and production code to reduce technical debt.",
+                    image: ""
+                },
+                {
+                    id: "c4",
+                    title: "Strategic Alignment",
+                    description: "I partner with C-levels to define the 'Why'. I use design artifacts (North Stars, Journey Maps) to align the organization on a shared vision before we commit resources to build it.",
+                    image: ""
+                }
+            ],
+            trackRecord: [
+                { year: "2025 — Pres.", role: "Principal Designer", company: "Victor Soussan Design", loc: "Paris" },
+                { year: "2024 — 2025", role: "Lead Product Designer", company: "France VAE (Beta.gouv.fr)", loc: "Paris" },
+                { year: "2023 — 2024", role: "Product Lead UI & Interaction", company: "UNOWHY", loc: "Neuilly-sur-Seine" },
+                { year: "2020 — 2023", role: "Design Lead", company: "UNOWHY", loc: "Neuilly-sur-Seine" },
+                { year: "2018 — 2020", role: "Senior UX/UI Designer", company: "UNOWHY", loc: "Neuilly-sur-Seine" },
+                { year: "2017 — 2018", role: "Senior Product Designer", company: "Dailymotion", loc: "Paris & NYC" },
+                { year: "2016 — 2017", role: "Product Designer", company: "Ogury", loc: "Paris" },
+                { year: "2014 — 2016", role: "Lead UI/UX Designer", company: "PagesJaunes", loc: "Paris" }
+            ],
+            faq: [
+                { q: "How do you work with developers?", a: "Collaboratively. I don't believe in 'hand-offs', I believe in 'handshakes'. I involve engineers early to understand constraints, and I stay involved during implementation (Design QA) to ensure the final quality matches the vision." },
+                { q: "Are you a manager or an IC?", a: "I am a Player-Coach. I have the seniority to lead teams and define strategy, but I love the craft. I stay hands-on in Figma because I believe leaders should understand the materials they are working with." },
+                { q: "How do you handle ambiguity?", a: "By visualizing it. When requirements are unclear, I build strawman prototypes to provoke reactions. It is easier for stakeholders to critique a concrete solution than to define an abstract problem." },
+                { q: "Do you work with early-stage startups?", a: "Yes. I enjoy the chaos of the 0-to-1 phase. I help founders translate their vision into a fundable, shippable MVP, establishing the initial design culture that will allow them to scale." }
+            ],
+            archive: [
+                { year: "2025", client: "France VAE", category: "Web App", desc: "State startup MVP for professional experience validation." },
+                { year: "2024", client: "Toolkit", category: "SaaS B2B", desc: "Construction management platform 0-to-1." },
+                { year: "2023", client: "SQOOL Extend", category: "Concept", desc: "Virtual machine solution for education." },
+                { year: "2022", client: "SQOOL Connect", category: "Web Platform", desc: "Centralized identity and service hub for 500k users." },
+                { year: "2018", client: "Dailymotion App", category: "Mobile App", desc: "Native mobile upload flow for journalists." },
+                { year: "2017", client: "Dailymotion Partner", category: "Web Platform", desc: "Livestream and video management dashboard." },
+                { year: "2016", client: "Ogury", category: "Dashboard", desc: "Ad-tech data visualization and campaign management." },
+                { year: "2015", client: "PagesJaunes", category: "App Redesign", desc: "Overhaul of the iOS/Android app with 22M downloads." },
+                { year: "2013", client: "EADS (Louis 21)", category: "Social Network", desc: "Private network for top 10,000 managers." },
+                { year: "2012", client: "Bouygues Immobilier", category: "Android App", desc: "Real estate exploration app." },
+                { year: "2010", client: "Freelance", category: "Art Direction", desc: "Various branding projects for fashion and retail." }
+            ],
+            process: [
+                { step: "01", title: "Discovery & Framing", desc: "Aligning stakeholders on the 'Why' and mapping the ecosystem before opening Figma.", icon: "search" },
+                { step: "02", title: "Strategic Prototyping", desc: "Building high-fidelity prototypes early to de-risk product bets.", icon: "layers" },
+                { step: "03", title: "System Architecture", desc: "Establishing scalable foundations (Tokens, Components) for code-readiness.", icon: "cpu" },
+                { step: "04", title: "Delivery & Rituals", desc: "Structured handoff and documentation for pixel-perfect shipping.", icon: "rocket" }
+            ],
+            resources: [
+                { title: "Design Delivery Process", type: "Notion Template", desc: "My framework for frictionless handoffs.", link: "#" },
+                { title: "Ideation Workshop Kit", type: "FigJam / Notion", desc: "Guide for efficient Crazy-8s sessions.", link: "#" },
+                { title: "Design QA Checklist", type: "Notion Template", desc: "Pre-flight checklist for quality assurance.", link: "#" },
+                { title: "Feature Conception Guide", type: "Notion Template", desc: "From problem statement to user flow.", link: "#" }
+            ],
+            playground: [
+                { title: "Generative UI Workflows", desc: "Experimenting with v0 and Bolt to bypass wireframing.", tag: "AI Workflow" },
+                { title: "Custom GPTs for Research", desc: "Synthesizing user interviews automatically.", tag: "LLM Ops" },
+                { title: "Visual AI Brand Exploration", desc: "Iterating on moodboards with Midjourney.", tag: "Generative Art" }
+            ],
+            clients: [
+                { name: "Dailymotion", link: "dailymotion" },
+                { name: "UNOWHY", link: "sqool" },
+                { name: "SQOOL", link: "sqool" },
+                { name: "Toolkit", link: "toolkit" },
+                { name: "Airbus Group", link: null },
+                { name: "France VAE", link: "francevae" },
+                { name: "Beta.gouv.fr", link: "francevae" },
+                { name: "Vinci Construction", link: null },
+                { name: "Banque des Territoires", link: null },
+                { name: "PagesJaunes", link: "pagesjaunes" },
+                { name: "Solocal", link: "pagesjaunes" },
+                { name: "Ogury", link: "ogury" },
+                { name: "Bouygues Immobilier", link: null }
+            ],
+            testimonials: [
+                { id: 1, text: "One of the most inspiring designers I have worked with. Victor combines overflowing creativity with impressive rigor. He knows how to translate complex visions into clear, impactful user experiences.", author: "Charlotte Rifflet", role: "CPO", company: "Scale-up (UNOWHY)", category: "Leadership" },
+                { id: 2, text: "Victor didn't just make mockups. He transformed business needs into user journeys perfectly adapted for a startup like ours. He laid the foundations that saved us enormous time.", author: "Pierre-Marie Nigay", role: "Founder", company: "Toolkit", category: "Leadership" },
+                { id: 3, text: "You were a driving force in the team. Always proposing ideas that shake things up. You never settled for just thinking; you produced, tested, prototyped to make things visible.", author: "Boris Aimé-Bauderlique", role: "Deployment Lead", company: "France VAE (Beta.gouv.fr)", category: "Product & Tech" },
+                { id: 4, text: "Very cultivated, curious and creative, he always brings pertinent ideas and original perspectives. In addition to his talent, Victor is particularly likable.", author: "Hubert Bloch", role: "Associate Director (DGA)", company: "UNOWHY", category: "Leadership" },
+                { id: 5, text: "Professional and rigorous, Victor knows how to translate business stakes into pertinent realizations. He is very attentive to his collaborators and different trades.", author: "Frederic Rodriguez", role: "Head of Poker", company: "FDJ (ex-PagesJaunes)", category: "Product & Tech" },
+                { id: 6, text: "Victor played a central role in defining product vision. He piloted the design team with rigor and inspiration. A veritable engine of progress.", author: "Justine Le Tellier", role: "UX Researcher", company: "UNOWHY", category: "Design Team" },
+                { id: 7, text: "Passionate and reliable, lover of details. His feedback allowed me to reach a new level. He listens to his team and puts them in the best conditions.", author: "Mbagna Johan Gaby", role: "Product Designer", company: "UNOWHY", category: "Design Team" },
+                { id: 8, text: "A manager concerned with his team's well-being... he is passionate and cares about details. A mentor who taught me technical and human lessons.", author: "Şafak Aktaş", role: "Designer", company: "Reflet Digital", category: "Design Team" },
+                { id: 9, text: "Victor is a true source of inspiration. He brought a pragmatic and professional approach. His leadership and collaboration were essential.", author: "Achref Akkari", role: "Product Manager", company: "UNOWHY", category: "Product & Tech" }
+            ]
+        };
+
+        // --- ICONS ---
+        // Inline SVG icons for zero-dependency rendering.
+        const Icon = ({ name, className }) => {
+            const icons = {
+                arrowRight: '<path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>',
+                arrowUpRight: '<path d="M7 17 17 7"></path><path d="M7 7h10v10"></path>',
+                plus: '<path d="M5 12h14"></path><path d="M12 5v14"></path>',
+                minus: '<path d="M5 12h14"></path>',
+                chevronDown: '<path d="m6 9 6 6 6-6"></path>',
+                check: '<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path>',
+                x: '<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>',
+                download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line>',
+                mail: '<rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>',
+                calendar: '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line>',
+                linkedin: '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle>',
+                search: '<circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>',
+                layers: '<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline>',
+                cpu: '<rect width="16" height="16" x="4" y="4" rx="2"></rect><rect width="6" height="6" x="9" y="9" rx="1"></rect><path d="M15 2v2"></path><path d="M15 20v2"></path><path d="M2 15h2"></path><path d="M2 9h2"></path><path d="M20 15h2"></path><path d="M20 9h2"></path><path d="M9 2v2"></path><path d="M9 20v2"></path>',
+                externalLink: '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" x2="21" y1="14" y2="3"></line>',
+                sparkles: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>'
+            };
+            return <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} dangerouslySetInnerHTML={{ __html: icons[name] || '' }} />;
+        };
+
+        // --- COMPONENTS ---
+
+        const Navigation = ({ setView, activeView }) => (
+            <motion.nav 
+                initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+                className="fixed top-6 left-0 right-0 z-50 flex justify-center pointer-events-none"
+            >
+                <div className="glass-panel px-6 py-3 rounded-full flex items-center gap-8 shadow-soft pointer-events-auto">
+                    <button onClick={() => setView('home')} className="font-semibold tracking-tight text-sm hover:text-apple-accent transition-colors">VS.</button>
+                    <div className="flex gap-6 text-xs font-medium text-apple-subtext">
+                        <button onClick={() => setView('home')} className={`${activeView === 'home' ? 'text-apple-dark' : ''} hover:text-apple-text transition-colors`}>Home</button>
+                        <button onClick={() => setView('archive')} className={`${activeView === 'archive' ? 'text-apple-dark' : ''} hover:text-apple-text transition-colors`}>Archive</button>
+                        <a href="#contact" className="hover:text-apple-text transition-colors">Contact</a>
+                    </div>
+                </div>
+            </motion.nav>
+        );
+
+        const Hero = () => {
+            const scrollToWork = () => {
+                document.getElementById('work').scrollIntoView({ behavior: 'smooth' });
+            };
+
+            return (
+                <section className="min-h-[90vh] flex flex-col justify-center items-center text-center px-6 pt-32 pb-20">
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }} 
+                        animate={{ opacity: 1, y: 0 }} 
+                        transition={{ duration: 0.8, ease: "easeOut" }} 
+                        className="max-w-5xl space-y-8" 
+                    >
+                        <h2 className="text-sm font-bold tracking-widest uppercase text-apple-accent mb-4">Victor Soussan</h2>
+                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-balance text-apple-dark">
+                            {DATA.profile.heroTitle}
+                        </h1>
+                        <p className="text-lg md:text-xl text-apple-subtext max-w-3xl mx-auto font-light leading-relaxed text-balance">
+                            {DATA.profile.heroText}
+                        </p>
+                        
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+                            <button 
+                                onClick={scrollToWork}
+                                className="px-8 py-4 rounded-full bg-apple-dark text-white font-medium text-lg hover:bg-gray-800 transition-all hover:scale-105 active:scale-95 shadow-lg"
+                            >
+                                View Case Studies
+                            </button>
+                            <a 
+                                href="https://cal.com/victorsoussan" 
+                                target="_blank"
+                                className="px-8 py-4 rounded-full bg-white text-apple-dark border border-gray-200 font-medium text-lg hover:bg-gray-50 transition-all hover:scale-105 active:scale-95 shadow-sm flex items-center gap-2 justify-center"
+                            >
+                                <Icon name="calendar" className="w-5 h-5" />
+                                Book a Call
+                            </a>
+                        </div>
+
+                        <div className="flex justify-center gap-12 pt-12 border-t border-gray-100 mt-12">
+                            {DATA.profile.stats.map((stat, i) => (
+                                <div key={i} className="flex flex-col items-center">
+                                    <span className="text-2xl font-bold text-apple-dark">{stat.value}</span>
+                                    <span className="text-xs uppercase tracking-widest text-apple-subtext mt-1">{stat.label}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                </section>
+            );
+        };
+
+        const CaseStudyCard = ({ study, onClick }) => {
+            const hasImage = study.image && study.image !== "";
+            return (
+                <motion.div 
+                    layoutId={`card-${study.id}`}
+                    onClick={() => onClick(study)}
+                    className="group relative bg-white rounded-[32px] overflow-hidden cursor-pointer shadow-soft hover:shadow-hover transition-shadow duration-500 aspect-[4/3] flex flex-col"
+                >
+                    <div className={`absolute inset-0 bg-gradient-to-br ${study.imageGradient} opacity-30 group-hover:opacity-50 transition-opacity duration-700`}></div>
+                    <div className="absolute inset-0 flex items-center justify-center p-8 md:p-12">
+                         <motion.div layoutId={`image-${study.id}`} className="w-full h-full bg-white rounded-xl shadow-lg border border-black/5 overflow-hidden relative">
+                            {hasImage ? <img src={study.image} alt={study.title} className="w-full h-full object-cover" /> : (
+                                <div className="w-full h-full flex items-center justify-center text-gray-200 text-xs uppercase font-bold tracking-widest">Visual Placeholder</div>
+                            )}
+                        </motion.div>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 p-8 pt-20 bg-gradient-to-t from-white via-white/90 to-transparent">
+                        <motion.div layoutId={`text-${study.id}`}>
+                            <span style={{ color: study.color }} className="text-xs font-bold uppercase tracking-wider mb-2 block">{study.client}</span>
+                            <h3 className="text-2xl font-bold text-apple-dark leading-tight">{study.title}</h3>
+                        </motion.div>
+                    </div>
+                </motion.div>
+            );
+        };
+
+        // --- SUB-COMPONENTS FOR CASE STUDY PAGE ---
+
+        // 1. Smart Navigation (Floating Pill with Scroll Spy)
+        const SmartNav = ({ activeSection }) => {
+            const [isExpanded, setIsExpanded] = useState(false);
+
+            const scrollTo = (id) => {
+                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+                setIsExpanded(false);
+            };
+
+            return (
+                <motion.div 
+                    initial={{ y: 100 }} animate={{ y: 0 }} transition={{ delay: 0.5, type: "spring" }}
+                    className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
+                    onMouseEnter={() => setIsExpanded(true)}
+                    onMouseLeave={() => setIsExpanded(false)}
+                >
+                    <div className={`glass-panel rounded-full shadow-floating transition-all duration-500 ease-spring ${isExpanded ? 'px-2 py-2' : 'px-6 py-3'}`}>
+                        {isExpanded ? (
+                            <div className="flex items-center gap-2">
+                                <button onClick={() => scrollTo('hero')} className="p-2 rounded-full hover:bg-gray-100 transition-colors" title="Top">
+                                    <div className="w-2 h-2 rounded-full bg-apple-dark"></div>
+                                </button>
+                                {[1,2,3,4,5].map(num => (
+                                    <button key={num} onClick={() => scrollTo(`section-${num}`)} className="px-3 py-1 rounded-full text-xs font-medium hover:bg-gray-100 transition-colors whitespace-nowrap">
+                                        Part {num}
+                                    </button>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-3">
+                                <div className="w-2 h-2 rounded-full bg-apple-accent animate-pulse"></div>
+                                <span className="text-xs font-medium text-apple-dark">{activeSection || "Overview"}</span>
+                            </div>
+                        )}
+                    </div>
+                </motion.div>
+            );
+        };
+
+        // 2. Scroll Spy Hook logic
+        const useScrollSpy = (sections) => {
+            const [activeSection, setActiveSection] = useState(null);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    let current = null;
+                    sections.forEach(section => {
+                        const element = document.getElementById(section.id);
+                        if (element && window.scrollY >= (element.offsetTop - 300)) {
+                            current = section.title;
+                        }
+                    });
+                    setActiveSection(current);
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, [sections]);
+
+            return activeSection;
+        };
+
+        // --- PAGE COMPONENT: DEDICATED CASE STUDY PAGE ---
+        const CaseStudyPage = ({ study, onBack, onNext }) => {
+            const sectionList = study.sections.map((s, i) => ({ id: `section-${i+1}`, title: s.heading }));
+            const activeSection = useScrollSpy([{ id: 'hero', title: 'Overview' }, ...sectionList]);
+
+            useEffect(() => { window.scrollTo(0,0); }, [study]);
+
+            const currentIndex = DATA.caseStudies.findIndex(s => s.id === study.id);
+            const nextIndex = (currentIndex + 1) % DATA.caseStudies.length;
+            const nextProject = DATA.caseStudies[nextIndex];
+
+            return (
+                <div className="bg-white min-h-screen animate-[fadeIn_0.6s_ease-out]">
+                    <nav className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center">
+                        <button onClick={onBack} className="flex items-center gap-2 text-sm font-medium text-apple-subtext hover:text-apple-dark transition-colors">← Back to All Work</button>
+                        <span className="text-sm font-bold text-apple-dark hidden md:block">{study.client} — {study.title}</span>
+                        <div className="w-20"></div>
+                    </nav>
+
+                    <header id="hero" className="pt-32 pb-20 px-6 max-w-7xl mx-auto text-center">
+                        <span style={{ color: study.color }} className="text-sm font-bold uppercase tracking-wider mb-4 block">{study.client}</span>
+                        <h1 className="text-5xl md:text-7xl font-bold text-apple-dark mb-6 tracking-tight text-balance">{study.title}</h1>
+                        <p className="text-xl md:text-2xl text-apple-subtext max-w-3xl mx-auto leading-relaxed mb-12">{study.subtitle}</p>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto mb-20 border-y border-gray-100 py-8">
+                            {study.metadata.map((meta, i) => (
+                                <div key={i} className="text-center">
+                                    <h4 className="text-xs font-bold text-gray-400 uppercase mb-1">{meta.label}</h4>
+                                    <span className="text-sm font-bold text-apple-dark">{meta.value}</span>
+                                </div>
+                            ))}
+                            <div className="text-center">
+                                <h4 className="text-xs font-bold text-gray-400 uppercase mb-1">Role</h4>
+                                <span className="text-sm font-bold text-apple-dark">{study.role}</span>
+                            </div>
+                        </div>
+                        <div className={`w-full aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br ${study.imageGradient} relative border border-black/5`}>
+                            {study.image ? <img src={study.image} className="w-full h-full object-cover" /> : (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <span className="text-apple-dark/20 font-bold text-2xl uppercase tracking-widest">Main Hero Visual</span>
+                                </div>
+                            )}
+                        </div>
+                    </header>
+
+                    <section className="max-w-3xl mx-auto px-6 mb-32">
+                        <h3 className="text-sm font-bold text-gray-400 uppercase mb-4">Executive Summary</h3>
+                        <p className="text-xl md:text-2xl text-apple-dark leading-relaxed font-medium">{study.executiveSummary}</p>
+                    </section>
+
+                    <div className="max-w-7xl mx-auto px-6 pb-32 space-y-32">
+                        {study.sections.map((section, i) => (
+                            <section key={i} id={`section-${i+1}`} className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                                <div className={`md:col-span-5 ${i % 2 === 1 ? 'md:order-2' : ''}`}>
+                                    <span className="text-6xl font-bold text-gray-100 mb-6 block">0{i+1}</span>
+                                    <h2 className="text-3xl font-bold text-apple-dark mb-6">{section.heading}</h2>
+                                    <p className="text-lg text-gray-600 leading-loose">{section.text}</p>
+                                </div>
+                                <div className={`md:col-span-7 ${i % 2 === 1 ? 'md:order-1' : ''}`}>
+                                    <div className="bg-gray-50 rounded-2xl overflow-hidden shadow-lg border border-gray-100 aspect-[4/3] relative group hover:shadow-xl transition-shadow duration-500">
+                                        {study.visuals[i] ? <img src={study.visuals[i]} className="w-full h-full object-cover" /> : (
+                                            <div className={`absolute inset-0 bg-gradient-to-br ${study.imageGradient} opacity-20 flex items-center justify-center`}>
+                                                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Visual Context {i+1}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </section>
+                        ))}
+                    </div>
+
+                    <div className="bg-apple-bg py-32 px-6 border-t border-gray-200">
+                        <div className="max-w-4xl mx-auto text-center">
+                            <p className="text-apple-subtext mb-8 uppercase tracking-widest text-xs font-bold">Next Case Study</p>
+                            <div onClick={() => onNext(nextProject)} className="group cursor-pointer bg-white rounded-3xl p-12 shadow-soft hover:shadow-hover transition-all duration-500 transform hover:-translate-y-1 border border-gray-100">
+                                <h2 className="text-4xl md:text-5xl font-bold text-apple-dark mb-4 group-hover:text-apple-accent transition-colors">{nextProject.title}</h2>
+                                <p className="text-xl text-gray-500">{nextProject.subtitle}</p>
+                                <div className="mt-8 inline-flex items-center gap-2 text-apple-accent font-medium">Read Case Study <Icon name="arrowRight" className="w-4 h-4" /></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <SmartNav activeSection={activeSection} />
+                    <Contact />
+                </div>
+            );
+        };
+
+        const ArchiveRow = ({ project }) => {
+            const [isOpen, setIsOpen] = useState(false);
+
+            return (
+                <>
+                    <div 
+                        className="group flex items-center justify-between py-6 border-b border-gray-200 hover:bg-gray-50 transition-colors px-4 cursor-pointer"
+                        onClick={() => setIsOpen(true)}
+                    >
+                        <div className="flex items-center gap-8 w-1/2">
+                            <span className="text-sm font-mono text-gray-400 w-12">{project.year}</span>
+                            <span className="text-lg font-bold text-apple-dark">{project.client}</span>
+                        </div>
+                        <div className="flex items-center gap-8">
+                            <span className="text-sm font-medium text-apple-accent opacity-0 group-hover:opacity-100 transition-opacity">{project.category}</span>
+                            <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center group-hover:bg-apple-dark group-hover:border-apple-dark transition-colors">
+                                <Icon name="arrowUpRight" className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <AnimatePresence>
+                        {isOpen && (
+                            <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-auto">
+                                <motion.div 
+                                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                                    className="absolute inset-0 bg-white/80 backdrop-blur-xl" onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
+                                />
+                                <motion.div 
+                                    initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                                    className="relative bg-white rounded-3xl shadow-2xl border border-gray-100 w-full max-w-4xl overflow-hidden"
+                                >
+                                    <div className="p-8 border-b border-gray-100 flex justify-between items-start">
+                                        <div>
+                                            <div className="flex items-center gap-3 mb-2">
+                                                <span className="text-xs font-bold bg-gray-100 px-2 py-1 rounded text-gray-500">{project.year}</span>
+                                                <span className="text-xs font-bold text-apple-accent uppercase">{project.category}</span>
+                                            </div>
+                                            <h3 className="text-3xl font-bold text-apple-dark">{project.client}</h3>
+                                            <p className="text-gray-500 mt-2">{project.desc}</p>
+                                        </div>
+                                        <button onClick={() => setIsOpen(false)} className="p-2 bg-gray-50 rounded-full hover:bg-gray-100"><Icon name="x" className="w-5 h-5" /></button>
+                                    </div>
+                                    <div className="p-8 bg-gray-50 grid grid-cols-3 gap-4">
+                                        {[1, 2, 3].map(i => (
+                                            <div key={i} className="aspect-[4/3] bg-white rounded-xl border border-gray-200 flex items-center justify-center">
+                                                <span className="text-xs text-gray-300 font-medium">Visual {i}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>
+                </>
+            );
+        };
+
+        const CapabilitiesAccordion = () => {
+            const [openId, setOpenId] = useState(null);
+
+            return (
+                <section className="py-32 px-6 bg-white">
+                    <div className="max-w-4xl mx-auto">
+                        <h2 className="text-3xl font-bold text-apple-dark mb-12">Capabilities</h2>
+                        <div className="space-y-4">
+                            {DATA.capabilities.map((cap) => (
+                                <div key={cap.id} className="border border-gray-200 rounded-2xl overflow-hidden">
+                                    <button 
+                                        onClick={() => setOpenId(openId === cap.id ? null : cap.id)}
+                                        className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors"
+                                    >
+                                        <span className="text-xl font-bold text-apple-dark">{cap.title}</span>
+                                        <div className={`transition-transform duration-300 ${openId === cap.id ? 'rotate-180' : ''}`}>
+                                            <Icon name="chevronDown" className="w-5 h-5 text-gray-400" />
+                                        </div>
+                                    </button>
+                                    <AnimatePresence>
+                                        {openId === cap.id && (
+                                            <motion.div 
+                                                initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                                                className="overflow-hidden bg-gray-50"
+                                            >
+                                                <div className="p-6 pt-0 flex flex-col md:flex-row gap-6 items-start">
+                                                    <div className="w-24 h-24 shrink-0 bg-white rounded-lg border border-gray-200 flex items-center justify-center">
+                                                        <div className="w-8 h-8 bg-gray-100 rounded-full"></div>
+                                                    </div>
+                                                    <p className="text-gray-600 leading-relaxed">{cap.description}</p>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const TrackRecord = () => (
+            <section className="py-32 px-6 bg-apple-bg border-t border-gray-200">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-bold text-apple-dark mb-12">Track Record</h2>
+                    <div className="relative border-l border-gray-200 ml-3 space-y-12">
+                        {DATA.trackRecord.map((job, i) => (
+                            <div key={i} className="relative pl-8">
+                                <div className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-white border-2 border-apple-accent"></div>
+                                <span className="text-xs font-mono text-apple-subtext mb-1 block">{job.year}</span>
+                                <h3 className="text-lg font-bold text-apple-dark">{job.role}</h3>
+                                <p className="text-apple-subtext">{job.company} <span className="text-gray-300 mx-2">•</span> {job.loc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Bio = () => (
+            <section id="about" className="py-32 px-6 bg-white">
+                <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-12">
+                    <div className="w-full md:w-1/3">
+                        <div className="w-48 h-64 bg-gray-100 rounded-2xl relative overflow-hidden mx-auto md:mx-0">
+                            {DATA.profile.avatarImage ? <img src={DATA.profile.avatarImage} className="w-full h-full object-cover" /> : <div className="absolute inset-0 flex items-center justify-center text-gray-300 font-bold text-xl">VS</div>}
+                        </div>
+                    </div>
+                    <div className="w-full md:w-2/3">
+                        <h2 className="text-3xl font-bold text-apple-dark mb-6">About</h2>
+                        <p className="text-lg text-gray-600 leading-loose whitespace-pre-line">{DATA.profile.bio}</p>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const FAQ = () => {
+            const [openIndex, setOpenIndex] = useState(null);
+            return (
+                <section className="py-32 px-6 bg-gray-50 border-t border-gray-200">
+                    <div className="max-w-3xl mx-auto">
+                        <h2 className="text-3xl font-bold text-apple-dark mb-12 text-center">FAQ</h2>
+                        <div className="space-y-4">
+                            {DATA.faq.map((item, i) => (
+                                <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                                    <button onClick={() => setOpenIndex(openIndex === i ? null : i)} className="w-full flex justify-between items-center p-6 text-left">
+                                        <span className="font-bold text-apple-dark">{item.q}</span>
+                                        <Icon name={openIndex === i ? 'minus' : 'plus'} className="w-4 h-4 text-gray-400" />
+                                    </button>
+                                    <AnimatePresence>
+                                        {openIndex === i && (
+                                            <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
+                                                <p className="px-6 pb-6 text-gray-600">{item.a}</p>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const Contact = () => (
+            <footer id="contact" className="bg-white py-20 px-6 border-t border-gray-200">
+                <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div>
+                        <h3 className="text-2xl font-bold text-apple-dark mb-2">Let's define the next standard.</h3>
+                        <p className="text-apple-subtext">Open for strategic leadership roles & mentorship.</p>
+                    </div>
+                    <div className="flex flex-wrap gap-4 justify-center md:justify-end">
+                        <a href="#" className="flex items-center gap-2 px-6 py-3 rounded-full bg-gray-100 text-apple-dark font-medium hover:bg-gray-200 transition-colors">
+                            <Icon name="download" className="w-4 h-4" /> Resume
+                        </a>
+                        <a href="https://cal.com/victorsoussan" target="_blank" className="flex items-center gap-2 px-6 py-3 rounded-full bg-apple-accent text-white font-medium hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/20">
+                            <Icon name="calendar" className="w-4 h-4" /> Book a Call
+                        </a>
+                        <a href="mailto:victorsoussan@gmail.com" className="flex items-center gap-2 px-6 py-3 rounded-full bg-apple-dark text-white font-medium hover:bg-gray-800 transition-colors">
+                            <Icon name="mail" className="w-4 h-4" /> Email
+                        </a>
+                    </div>
+                </div>
+                <div className="max-w-6xl mx-auto mt-16 text-center text-xs text-gray-400">© {new Date().getFullYear()} Victor Soussan. Paris, France.</div>
+            </footer>
+        );
+
+        const LogoCarousel = ({ onClientClick }) => {
+            const logos = [...DATA.clients, ...DATA.clients, ...DATA.clients];
+            return (
+                <div className="w-full py-20 border-b border-gray-200 bg-white overflow-hidden relative group">
+                    <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+                    <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+                    <div className="flex w-fit animate-scroll hover:pause">
+                        {logos.map((client, index) => (
+                            <div 
+                                key={index} 
+                                onClick={() => client.link && onClientClick(client.link)}
+                                className={`flex justify-center items-center px-12 ${client.link ? 'cursor-pointer' : 'cursor-default'}`}
+                            >
+                                <span className={`text-xl md:text-2xl font-bold text-gray-300 whitespace-nowrap font-sans tracking-tight transition-colors duration-300 select-none ${client.link ? 'hover:text-apple-accent' : 'hover:text-apple-dark'}`}>
+                                    {client.name}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const Testimonials = () => {
+            const [activeCategory, setActiveCategory] = useState('All');
+            const categories = ['All', 'Leadership', 'Product & Tech', 'Design Team'];
+            const filtered = activeCategory === 'All' ? DATA.testimonials : DATA.testimonials.filter(t => t.category === activeCategory);
+
+            return (
+                <section id="testimonials" className="py-32 px-6 bg-apple-bg">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="mb-12 px-2 md:px-4">
+                            <h2 className="text-3xl font-bold text-apple-dark mb-4">Trusted by Leaders</h2>
+                            <p className="text-apple-subtext max-w-xl mb-8">Feedback from founders, C-levels, and technical partners.</p>
+                            <div className="flex flex-wrap gap-2 md:gap-4">
+                                {categories.map(cat => (
+                                    <button key={cat} onClick={() => setActiveCategory(cat)}
+                                        className={`px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 ${activeCategory === cat ? 'bg-apple-dark text-white shadow-lg' : 'bg-white text-apple-subtext hover:bg-gray-100 border border-gray-100'}`}>
+                                        {cat}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 px-2 md:px-4 space-y-6">
+                            <AnimatePresence mode="popLayout">
+                                {filtered.map((item) => (
+                                    <motion.div layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.3 }} key={item.id}
+                                        className="break-inside-avoid bg-white p-8 rounded-[24px] shadow-sm border border-gray-100 flex flex-col hover:shadow-hover transition-shadow duration-300"
+                                    >
+                                        <div className="mb-6 relative">
+                                            <div className="flex justify-between items-start mb-3">
+                                                <div className="flex gap-1">{[1,2,3,4,5].map(s => <div key={s} className="w-2 h-2 rounded-full bg-apple-accent"></div>)}</div>
+                                                <div className="flex items-center gap-1 bg-blue-50 px-2 py-1 rounded-md">
+                                                    <Icon name="check" className="w-3 h-3 text-apple-accent fill-apple-accent" />
+                                                    <span className="text-[10px] font-semibold text-apple-accent uppercase tracking-wide">Verified</span>
+                                                </div>
+                                            </div>
+                                            <p className="text-base text-apple-dark leading-relaxed font-medium">"{item.text}"</p>
+                                        </div>
+                                        <div className="flex items-center justify-between border-t border-gray-100 pt-4 mt-auto">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 font-bold text-xs border border-white shadow-sm">
+                                                    {item.author.charAt(0)}
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-bold text-apple-dark">{item.author}</p>
+                                                    <p className="text-xs text-apple-subtext">{item.role} @ {item.company}</p>
+                                                </div>
+                                            </div>
+                                            <a href="https://linkedin.com/in/victorsoussan" target="_blank" className="text-gray-300 hover:text-apple-accent transition-colors"><Icon name="linkedin" className="w-4 h-4" /></a>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const Playground = () => (
+            <section id="playground" className="py-32 px-6 bg-apple-lab text-white">
+                <div className="max-w-6xl mx-auto">
+                    <div className="flex items-center gap-4 mb-16">
+                        <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
+                            <Icon name="sparkles" className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                            <h2 className="text-3xl font-bold">The Lab</h2>
+                            <p className="text-gray-400">AI exploration & experimental interfaces.</p>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {DATA.playground.map((item, i) => (
+                            <div key={i} className="group relative bg-white/5 p-8 rounded-3xl border border-white/10 hover:bg-white/10 transition-colors cursor-pointer overflow-hidden">
+                                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <Icon name="externalLink" className="w-5 h-5 text-white" />
+                                </div>
+                                <span className="text-xs font-bold text-apple-accent uppercase tracking-wider mb-4 block">{item.tag}</span>
+                                <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                                <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Process = () => (
+            <section id="process" className="py-32 px-6 bg-white">
+                <div className="max-w-6xl mx-auto">
+                    <div className="mb-20 text-center md:text-left">
+                        <h2 className="text-3xl font-bold text-apple-dark mb-4">Strategic Prototyping</h2>
+                        <p className="text-apple-subtext max-w-xl">My methodology for moving from ambiguity to shipped product.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+                        <div className="hidden md:block absolute top-8 left-0 right-0 h-0.5 bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 z-0"></div>
+                        {DATA.process.map((step, i) => (
+                            <div key={i} className="relative z-10">
+                                <div className="w-16 h-16 rounded-2xl bg-white border border-gray-200 shadow-sm flex items-center justify-center mb-8 mx-auto md:mx-0">
+                                    <Icon name={step.icon} className="w-6 h-6 text-apple-dark" />
+                                </div>
+                                <div className="text-center md:text-left">
+                                    <span className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-2 block">{step.step}</span>
+                                    <h3 className="text-lg font-bold text-apple-dark mb-3">{step.title}</h3>
+                                    <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Resources = () => (
+            <section id="resources" className="py-32 px-6 bg-gray-50 border-t border-gray-200">
+                <div className="max-w-6xl mx-auto">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                        <div>
+                            <h2 className="text-3xl font-bold text-apple-dark mb-4">The Toolkit</h2>
+                            <p className="text-apple-subtext max-w-xl">Resources, templates, and checklists I've built over 15 years.</p>
+                        </div>
+                        <a href="#" className="text-sm font-medium text-apple-accent hover:underline flex items-center gap-1">
+                            View all in Notion <Icon name="externalLink" className="w-3 h-3" />
+                        </a>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {DATA.resources.map((res, i) => (
+                            <a href={res.link} key={i} className="group flex items-start gap-6 p-8 rounded-2xl bg-white border border-gray-200 hover:border-apple-accent/30 hover:shadow-md transition-all duration-300">
+                                <div className="w-12 h-12 shrink-0 rounded-lg bg-gray-50 flex items-center justify-center group-hover:bg-blue-50 transition-colors">
+                                    <Icon name="download" className="w-5 h-5 text-gray-400 group-hover:text-apple-accent" />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-apple-dark mb-2 group-hover:text-apple-accent transition-colors">{res.title}</h3>
+                                    <div className="inline-block px-2 py-0.5 rounded-full bg-gray-100 text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-3">{res.type}</div>
+                                    <p className="text-sm text-gray-500 leading-relaxed">{res.desc}</p>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        // --- VIEWS ---
+
+        const HomeView = ({ setView, setStudy }) => (
+            <div className="animate-[fadeIn_0.5s_ease-out]">
+                <Hero />
+                <section id="work" className="px-4 md:px-6 pb-20">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                            {DATA.caseStudies.map(study => (
+                                <CaseStudyCard key={study.id} study={study} onClick={(s) => { setStudy(s); setView('case-study'); }} />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+                <CapabilitiesAccordion />
+                <Bio />
+                <TrackRecord />
+                <Playground />
+                <Process />
+                <Resources />
+                <LogoCarousel onClientClick={(link) => {
+                    const study = DATA.caseStudies.find(s => s.id === link);
+                    if (study) { setStudy(study); setView('case-study'); }
+                }} />
+                <Testimonials />
+                <FAQ />
+                <Contact />
+            </div>
+        );
+
+        const ArchiveView = () => (
+            <div className="min-h-screen pt-32 pb-20 px-6 max-w-5xl mx-auto animate-[fadeIn_0.5s_ease-out]">
+                <div className="mb-12">
+                    <h1 className="text-4xl font-bold text-apple-dark mb-4">Project Archive</h1>
+                    <p className="text-apple-subtext">A chronological index of selected works from 2010 to present.</p>
+                </div>
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="flex px-4 py-4 border-b border-gray-100 bg-gray-50 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                        <span className="w-1/2">Client / Year</span>
+                        <span>Category</span>
+                    </div>
+                    {DATA.archive.map((project, i) => (
+                        <ArchiveRow key={i} project={project} />
+                    ))}
+                </div>
+                <Contact />
+            </div>
+        );
+
+        // --- MAIN APP ---
+
+        const App = () => {
+            const [view, setView] = useState('home');
+            const [selectedStudy, setSelectedStudy] = useState(null);
+
+            useEffect(() => {
+                window.scrollTo(0,0);
+            }, [view, selectedStudy]);
+
+            const handleSetStudy = (study) => {
+                setSelectedStudy(study);
+                setView('case-study');
+            };
+
+            return (
+                <div className="antialiased selection:bg-blue-100 selection:text-blue-900">
+                    {view !== 'case-study' && <Navigation setView={setView} activeView={view} />}
+                    
+                    <AnimatePresence mode="wait">
+                        {view === 'home' && (
+                            <motion.div key="home" exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
+                                <HomeView setView={setView} setStudy={handleSetStudy} />
+                            </motion.div>
+                        )}
+                        
+                        {view === 'archive' && (
+                            <motion.div key="archive" exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
+                                <ArchiveView />
+                            </motion.div>
+                        )}
+
+                        {view === 'case-study' && selectedStudy && (
+                            <motion.div key="case-study" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }} transition={{ duration: 0.5 }}>
+                                <CaseStudyPage 
+                                    study={selectedStudy} 
+                                    onBack={() => setView('home')} 
+                                    onNext={handleSetStudy}
+                                />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
